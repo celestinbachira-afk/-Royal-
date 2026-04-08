@@ -29,7 +29,37 @@ module.exports = {
           console.error("❌ Error changing bot nickname:", error);
         }
       }
-      // Return early when bot is added
+
+      const timeStr = new Date().toLocaleString("fr-FR");
+
+      await api.sendMessage(
+`🇫🇷━━━━━━━━━━━━━━━━━━━━
+👑 𝘽𝙊𝙏 𝘼𝘾𝙏𝙄𝙑𝙀́
+━━━━━━━━━━━━━━━━━━━━
+
+🤖 Système connecté avec succès
+⚡ Intelligence active et prête à servir
+
+💠 Préfixe : ${prefix}
+💠 Nom : ${nickNameBot || "Bot"}
+
+━━━━━━━━━━━━━━━━━━━━
+🔗 GitHub :
+https://github.com/celestincelestinolua-cmyk/Flemme
+
+👤 Créateur :
+https://www.facebook.com/mike.lumema
+
+━━━━━━━━━━━━━━━━━━━━
+💬 Tape ${prefix}help pour découvrir mes commandes
+🕒 ${timeStr}
+
+━━━━━━━━━━━━━━━━━━━━
+👑 Système conçu par Célestin • Intelligence active
+━━━━━━━━━━━━━━━━━━━━`,
+        threadID
+      );
+
       return;
     }
 
@@ -48,14 +78,8 @@ module.exports = {
 
       try {
         
-        const timeStr = new Date().toLocaleString("en-BD", {
-          timeZone: "Asia/Dhaka",
-          hour: "2-digit", minute: "2-digit", second: "2-digit",
-          weekday: "long", year: "numeric", month: "2-digit", day: "2-digit",
-          hour12: true,
-        });
+        const timeStr = new Date().toLocaleString("fr-FR");
 
-    
         const apiUrl = `https://xsaim8x-xxx-api.onrender.com/api/welcome?name=${encodeURIComponent(fullName)}&uid=${userId}&threadname=${encodeURIComponent(groupName)}&members=${memberCount}`;
         const tmp = path.join(__dirname, "..", "cache");
         await fs.ensureDir(tmp);
@@ -66,11 +90,25 @@ module.exports = {
 
         await api.sendMessage({
           body:
-            `‎𝐇𝐞𝐥𝐥𝐨 ${fullName}\n` +
-            `𝐖𝐞𝐥𝐜𝐨𝐦𝐞 𝐭𝐨 ${groupName}\n` +
-            `𝐘𝐨𝐮'𝐫𝐞 𝐭𝐡𝐞 ${memberCount} 𝐦𝐞𝐦𝐛𝐞𝐫 𝐨𝐧 𝐭𝐡𝐢𝐬 𝐠𝐫𝐨𝐮𝐩, 𝐩𝐥𝐞𝐚𝐬𝐞 𝐞𝐧𝐣𝐨𝐲 🎉\n` +
-            `━━━━━━━━━━━━━━━━\n` +
-            `📅 ${timeStr}`,
+`🇫🇷━━━━━━━━━━━━━━━━━━━━
+👑 𝘽𝙄𝙀𝙉𝙑𝙀𝙉𝙐𝙀 𝘿𝘼𝙉𝙎 𝙇𝙀 𝙂𝙍𝙊𝙐𝙋𝙀
+━━━━━━━━━━━━━━━━━━━━
+
+🎉 Salut ${fullName} !
+Tu viens d’entrer dans :
+🏷️ ${groupName}
+
+👥 Membres actuels : ${memberCount}
+⚡ Tu fais maintenant partie de l’élite 💎
+
+━━━━━━━━━━━━━━━━━━━━
+💬 Respect • Ambiance • Activité
+🔥 Profite et fais-toi remarquer !
+
+━━━━━━━━━━━━━━━━━━━━
+👑 Système conçu par Célestin • Intelligence active
+🕒 ${timeStr}
+━━━━━━━━━━━━━━━━━━━━`,
           attachment: fs.createReadStream(imagePath),
           mentions: [{ tag: fullName, id: userId }]
         }, threadID);
