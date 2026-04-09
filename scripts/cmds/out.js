@@ -1,6 +1,7 @@
 const axios = require("axios");
 const fs = require("fs-extra");
 const request = require("request");
+
 module.exports = {
   config: {
     name: "leave",
@@ -18,13 +19,28 @@ module.exports = {
     }
   },
 
-  onStart: async function ({ api,event,args, message }) {
- var id;
- if (!args.join(" ")) {
- id = event.threadID;
- } else {
- id = parseInt(args.join(" "));
- }
- return api.sendMessage('Im Leaving In This Group, Thankyou For Using Me! 😙', id, () => api.removeUserFromGroup(api.getCurrentUserID(), id))
+  onStart: async function ({ api, event, args, message }) {
+    var id;
+    if (!args.join(" ")) {
+      id = event.threadID;
+    } else {
+      id = parseInt(args.join(" "));
     }
-  };
+
+    return api.sendMessage(
+`━━━━━━━━━━━━━━━━━━━
+👑 ÉCLIPSE
+━━━━━━━━━━━━━━━━━━━
+
+Une présence s’efface…
+et le silence reprend naturellement sa place.
+
+Tout le monde passe,
+mais certains ne laissent rien derrière eux.
+
+━━━━━━━━━━━━━━━━━━━`,
+      id,
+      () => api.removeUserFromGroup(api.getCurrentUserID(), id)
+    );
+  }
+};
