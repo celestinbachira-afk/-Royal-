@@ -3,8 +3,8 @@ const { getTime, drive } = global.utils;
 module.exports = {
 	config: {
 		name: "leave",
-		version: "1.4",
-		author: "NTKhang",
+		version: "1.8",
+		author: "NTKhang x Célestin 🔥",
 		category: "events"
 	},
 
@@ -26,13 +26,14 @@ module.exports = {
 				const { threadID } = event;
 				const threadData = await threadsData.get(threadID);
 				if (!threadData.settings.sendLeaveMessage) return;
+
 				const { leftParticipantFbId } = event.logMessageData;
 				if (leftParticipantFbId == api.getCurrentUserID()) return;
 
-				const threadName = threadData.threadName;
 				const userName = await usersData.getName(leftParticipantFbId);
 
 				let { leaveMessage = getLang("defaultLeaveMessage") } = threadData.data;
+
 				const form = {
 					mentions: leaveMessage.match(/\{userNameTag\}/g) ? [{
 						tag: userName,
@@ -40,17 +41,67 @@ module.exports = {
 					}] : null
 				};
 
-				// Nouveau message stylé en français avec cadre
-				form.body =
-`🇫🇷━━━━━━━━━━━━━━━━━━━━
-💅 AU REVOIR
-━━━━━━━━━━━━━━━━━━━━
+				// 🔥 Détection type (quitté ou expulsé)
+				const isKicked = event.author && event.author != leftParticipantFbId;
 
-⚠️ T’as quitté le groupe… mais soyons honnêtes, t’étais pas vraiment dans le style.
+				// 🕒 Heure actuelle
+				const hour = new Date().getHours();
+				let timeText = "🌙 Nuit sombre...";
+				if (hour >= 5 && hour < 12) timeText = "🌅 Matin calme...";
+				else if (hour >= 12 && hour < 17) timeText = "☀️ Plein jour...";
+				else if (hour >= 17 && hour < 22) timeText = "🌆 Soirée active...";
 
-━━━━━━━━━━━━━━━━━
-🌟 Notre devise : “Toujours au top, même quand les autres ne le sont pas.”
-━━━━━━━━━━━━━━━━━━━━`;
+				// 🎯 Messages QUITTÉ
+				const leaveMsgs = [
+`🇫🇷━━━━━━━━━━━━
+${timeText}
+
+💨 ${userName} est parti…
+💅 Le style reste.
+━━━━━━━━━━━━`,
+
+`🇫🇷━━━━━━━━━━━━
+${timeText}
+
+👀 ${userName} a quitté.
+🔥 Rien ne change.
+━━━━━━━━━━━━`,
+
+`🇫🇷━━━━━━━━━━━━
+${timeText}
+
+🫠 ${userName} a disparu.
+👑 L’élite continue.
+━━━━━━━━━━━━`
+				];
+
+				// 💀 Messages EXPULSÉ
+				const kickMsgs = [
+`🇫🇷━━━━━━━━━━━━
+${timeText}
+
+💀 ${userName} expulsé.
+⚠️ Niveau insuffisant.
+━━━━━━━━━━━━`,
+
+`🇫🇷━━━━━━━━━━━━
+${timeText}
+
+🚫 ${userName} supprimé.
+👑 Sélection naturelle.
+━━━━━━━━━━━━`,
+
+`🇫🇷━━━━━━━━━━━━
+${timeText}
+
+⚡ ${userName} éjecté.
+🔥 Le groupe respire mieux.
+━━━━━━━━━━━━`
+				];
+
+				// 🎲 Choix final
+				const messages = isKicked ? kickMsgs : leaveMsgs;
+				form.body = messages[Math.floor(Math.random() * messages.length)];
 
 				if (leaveMessage.includes("{userNameTag}")) {
 					form.mentions = [{
